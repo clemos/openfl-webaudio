@@ -20,9 +20,15 @@ class SampleDataEvent extends Event {
 	} 
 
 	function get_data(){
-
 		var __channelData = __audioProcessingEvent.inputBuffer.getChannelData(0);
-		return ByteArray.__ofBuffer( __channelData.buffer );
+		var bytes = new ByteArray();
+		bytes.length = __channelData.length * 4;
+		for( f in __channelData ){
+			bytes.writeFloat( f );
+		}
+		trace(__channelData.length);
+		trace("number of channels",__audioProcessingEvent.inputBuffer.numberOfChannels);
+		return bytes;
 
 	}
 

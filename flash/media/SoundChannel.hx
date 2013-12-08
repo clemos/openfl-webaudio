@@ -135,7 +135,7 @@ class SoundChannel extends EventDispatcher {
 	private function __start(){
 		untyped {
 			if( __source.start != null ){
-				__source.start ( Sound.__ctx.currentTime );	
+				__source.start ( SoundMixer.__audioContext.currentTime );	
 			}else{
 				__source.noteOn ( 0 );	
 			}

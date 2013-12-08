@@ -127,11 +127,12 @@ class Sound extends EventDispatcher {
 	}
 	
 	public function play (startTime:Float = 0.0, loops:Int = 0, sndTransform:SoundTransform = null):SoundChannel {
-
+		//trace("play");
 		// -- GC the sound when the following closure is executed
 		var self = this;
 		var curIdx = __soundIdx;
 		var removeRef = function () {
+			//trace("removing channel");
 			self.__soundChannels.remove (curIdx);
 		}
 		// --
@@ -142,7 +143,7 @@ class Sound extends EventDispatcher {
 		};
 		__scriptProcessorNode = SoundMixer.__createScriptProcessor( onSample );
 
-		untyped __scriptProcessorNode["connect"](__ctx.destination);
+		untyped __scriptProcessorNode["connect"](SoundMixer.__audioContext.destination);
 
 		var channel = SoundChannel.__create (this, startTime, loops, sndTransform, removeRef);
 		__soundChannels.set (curIdx, channel);

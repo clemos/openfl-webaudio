@@ -51,30 +51,6 @@ class Sound extends EventDispatcher {
 	//private var __channelDataBuffer:ArrayBuffer;
 	private var __sampleIndex:Int;
 	private var __scriptProcessorNode:ScriptProcessorNode;
-
-	public static var __ctx (get___ctx,null) : AudioContext;
-	private static var __ctxClass : Dynamic;
-
-	static function get___ctx() untyped {
-
-		if( __ctx != null ) return __ctx;
-
-		__ctxClass = if( __js__('typeof webkitAudioContext') != "undefined" ){
-			__js__('webkitAudioContext');
-		}else if( __js__('typeof AudioContext') != "undefined" ){
-			__js__('AudioContext');
-		}else{
-			null;
-		}
-
-		if( __ctxClass == null ){
-			trace( "Web Audio Api is not available..." );
-			return;
-		}
-
-		__ctx = untyped __new__( __ctxClass );
-		return __ctx;
-	}
 	
 	public function new (stream:URLRequest = null, context:SoundLoaderContext = null):Void {
 		
@@ -160,12 +136,12 @@ class Sound extends EventDispatcher {
 		}
 		// --
 
-		__scriptProcessorNode = __ctx.createScriptProcessor( 8192 );
-		__scriptProcessorNode.onaudioprocess = function(e){
+		var onSample = function(e){
 			var sampleData = SampleDataEvent.__create(e);
 			dispatchEvent( sampleData );
-
 		};
+		__scriptProcessorNode = SoundMixer.__createScriptProcessor( onSample );
+
 		untyped __scriptProcessorNode["connect"](__ctx.destination);
 
 		var channel = SoundChannel.__create (this, startTime, loops, sndTransform, removeRef);
@@ -294,6 +270,7 @@ class Sound extends EventDispatcher {
 	
 	
 	private function __onSoundLoaded (evt:Event):Void {
+		var __ctx = SoundMixer.__audioContext;
 		__file = __soundCache.data;
 		__audioBuffer = __ctx.createBuffer( __file.__getBuffer() , false );
 

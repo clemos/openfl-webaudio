@@ -3,6 +3,7 @@ package flash.media;
 
 import flash.events.Event;
 import flash.events.EventDispatcher;
+import flash.media.SoundMixer;
 import flash.utils.ByteArray;
 import js.html.MediaElement;
 import js.Browser;
@@ -11,6 +12,8 @@ import js.html.audio.AudioBufferSourceNode;
 import js.html.audio.GainNode;
 import js.html.audio.PannerNode;
 import js.html.ArrayBuffer;
+import js.html.audio.ScriptProcessorNode;
+import flash.events.SampleDataEvent;
 
 
 class SoundChannel extends EventDispatcher {
@@ -21,6 +24,7 @@ class SoundChannel extends EventDispatcher {
 	public var __source (default, null): AudioBufferSourceNode;
 	public var __gain (default,null) : GainNode;
 	public var __panner (default,null) : PannerNode;
+	private var __scriptProcessorNode:ScriptProcessorNode;
 
 	public var position (default, null):Float;
 	public var rightPeak (default, null):Float;
@@ -62,13 +66,20 @@ class SoundChannel extends EventDispatcher {
 		
 		var channel = new SoundChannel ();
 
-		var __ctx = Sound.__ctx;
+		var __ctx = SoundMixer.__audioContext;
 		
 		channel.__source = __ctx.createBufferSource();
 		channel.__gain = ( untyped __ctx.createGainNode != null ) ? untyped __ctx.createGainNode() : __ctx.createGain();
 		channel.__panner = __ctx.createPanner();
 
-		untyped channel.__source['connect']( channel.__gain );
+		channel.__scriptProcessorNode = __ctx.createScriptProcessor( 8192 );
+		channel.__scriptProcessorNode.onaudioprocess = function(e){
+			var sampleData = SampleDataEvent.__create(e);
+			channel.dispatchEvent( sampleData );
+		};
+		
+		untyped channel.__source['connect']( channel.__scriptProcessorNode );
+		untyped channel.__scriptProcessorNode['connect']( channel.__gain );
 		untyped channel.__gain['connect']( channel.__panner );
 		untyped channel.__panner['connect']( __ctx.destination );
 

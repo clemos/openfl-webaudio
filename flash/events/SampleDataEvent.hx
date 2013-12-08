@@ -20,7 +20,10 @@ class SampleDataEvent extends Event {
 	} 
 
 	function get_data(){
-		return ByteArray.__ofBuffer( __audioProcessingEvent.outputBuffer.getChannelData(0).buffer );
+
+		var __channelData = __audioProcessingEvent.inputBuffer.getChannelData(0);
+		return ByteArray.__ofBuffer( __channelData.buffer );
+
 	}
 
 }

@@ -20,15 +20,18 @@ class SampleDataEvent extends Event {
 	} 
 
 	function get_data(){
-		var __channelData = __audioProcessingEvent.inputBuffer.getChannelData(0);
-		var bytes = new ByteArray();
-		bytes.length = __channelData.length * 4;
-		for( f in __channelData ){
-			bytes.writeFloat( f );
+		if( data == null ) {
+			// FIXME only works for microphone (mono)
+			var __channelData = __audioProcessingEvent.inputBuffer.getChannelData(0);
+			data = new ByteArray();
+			data.length = __channelData.length * 4;
+			for( f in __channelData ){
+				data.writeFloat( f );
+			}
+			data.position = 0;
 		}
-		trace(__channelData.length);
-		trace("number of channels",__audioProcessingEvent.inputBuffer.numberOfChannels);
-		return bytes;
+		
+		return data;
 
 	}
 

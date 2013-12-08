@@ -49,7 +49,7 @@ class Sound extends EventDispatcher {
 	private var __file:ByteArray;
 	private var __channelData:Array<Float32Array>;
 	//private var __channelDataBuffer:ArrayBuffer;
-	private var __sampleIndex:Int;
+	private var __sampleIndex:Int = 0;
 	private var __scriptProcessorNode:ScriptProcessorNode;
 	
 	public function new (stream:URLRequest = null, context:SoundLoaderContext = null):Void {
@@ -105,7 +105,7 @@ class Sound extends EventDispatcher {
 		var len = max-offset;
 
 		// preallocate for optimization
-		bytes.length = 2 * len * 4;
+		bytes.length = bytes.position + 2 * len * 4;
 
 		for( i in offset...max ){
 
@@ -137,6 +137,7 @@ class Sound extends EventDispatcher {
 		}
 		// --
 
+		// FIXME doesn't work
 		var onSample = function(e){
 			var sampleData = SampleDataEvent.__create(e);
 			dispatchEvent( sampleData );

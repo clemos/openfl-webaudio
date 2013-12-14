@@ -19,16 +19,29 @@ class SampleDataEvent extends Event {
 		return _e;
 	} 
 
+	// microphone data also comes in stereo
+
 	function get_data(){
 		if( data == null ) {
-			// FIXME only works for microphone (mono)
-			var __channelData = __audioProcessingEvent.inputBuffer.getChannelData(0);
+			
+			var buffer = __audioProcessingEvent.inputBuffer;
+			
 			data = new ByteArray();
-			data.length = __channelData.length * 4;
-			for( f in __channelData ){
-				data.writeFloat( f );
+			data.length = buffer.length * buffer.numberOfChannels * 4;
+
+			var channels = [];
+			for( i in 0...buffer.numberOfChannels ){
+				channels[i] = buffer.getChannelData( i );
 			}
+
+			for( i in 0...buffer.length ){
+				for( c in channels ){
+					data.writeFloat( c[i] );
+				}
+			}
+
 			data.position = 0;
+
 		}
 		
 		return data;

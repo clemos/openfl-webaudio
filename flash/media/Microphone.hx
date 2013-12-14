@@ -6,6 +6,7 @@ import js.html.audio.MediaStreamAudioSourceNode;
 import js.html.rtc.MediaStream;
 import js.html.audio.ScriptProcessorNode;
 import flash.events.SampleDataEvent;
+import js.html.audio.AudioProcessingEvent;
 
 class Microphone extends EventDispatcher {
 
@@ -34,7 +35,7 @@ class Microphone extends EventDispatcher {
 	function __create( stream : MediaStream ){
 		// trigger unmute ?
 		__mediaStream = stream;
-		var __onSample = function(e){
+		var __onSample = function(e : AudioProcessingEvent ){
 			var sampleData = SampleDataEvent.__create(e);
 			dispatchEvent( sampleData );
 		};

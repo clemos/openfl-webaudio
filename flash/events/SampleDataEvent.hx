@@ -15,6 +15,12 @@ class SampleDataEvent extends Event {
 
 	public static function __create(e:AudioProcessingEvent){
 		var _e = new SampleDataEvent( SAMPLE_DATA );
+		
+		// copy input to output...
+		for(i in 0...e.inputBuffer.numberOfChannels){
+			e.outputBuffer.getChannelData(i).set(e.inputBuffer.getChannelData(i), 0);
+		}
+
 		_e.__audioProcessingEvent = e;
 		return _e;
 	} 

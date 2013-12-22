@@ -71,13 +71,12 @@ class SoundChannel extends EventDispatcher {
 		channel.__source = __ctx.createBufferSource();
 		channel.__gain = ( untyped __ctx.createGainNode != null ) ? untyped __ctx.createGainNode() : __ctx.createGain();
 		channel.__panner = __ctx.createPanner();
-
-		channel.__scriptProcessorNode = __ctx.createScriptProcessor( 8192 );
-		channel.__scriptProcessorNode.onaudioprocess = function(e){
+		
+		channel.__scriptProcessorNode = SoundMixer.__createScriptProcessor(function(e){
 			var sampleData = SampleDataEvent.__create(e);
 			channel.dispatchEvent( sampleData );
-		};
-		
+		});
+
 		untyped channel.__source['connect']( channel.__scriptProcessorNode );
 		untyped channel.__scriptProcessorNode['connect']( channel.__gain );
 		untyped channel.__gain['connect']( channel.__panner );

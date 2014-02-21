@@ -274,17 +274,22 @@ class Sound extends EventDispatcher {
 	private function __onSoundLoaded (evt:Event):Void {
 		var __ctx = SoundMixer.__audioContext;
 		__file = __soundCache.data;
-		__audioBuffer = __ctx.createBuffer( __file.__getBuffer() , false );
+		__ctx.decodeAudioData( __file.__getBuffer() , function(buffer){
+			__audioBuffer = buffer; // __ctx.createBuffer( __file.__getBuffer() , false );
 
+			trace("loaded",__file.length);
+			trace("buffer",__audioBuffer.length);
+			//trace(__soundCache.dataFormat);
+			//trace(Type.typeof(__soundCache.data));
 
-		trace("loaded",__file.length);
-		trace("buffer",__audioBuffer.length);
-		//trace(__soundCache.dataFormat);
-		//trace(Type.typeof(__soundCache.data));
+			__removeEventListeners ();
+			var evt = new Event (Event.COMPLETE);
+			dispatchEvent (evt);
 
-		__removeEventListeners ();
-		var evt = new Event (Event.COMPLETE);
-		dispatchEvent (evt);
+			return true;
+
+		} );
+		
 		
 	}
 	

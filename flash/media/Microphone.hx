@@ -33,6 +33,7 @@ class Microphone extends EventDispatcher {
 	}
 
 	function __create( stream : MediaStream ){
+		//trace('user media created',stream);
 		// trigger unmute ?
 		__mediaStream = stream;
 		var __onSample = function(e : AudioProcessingEvent ){
@@ -53,7 +54,20 @@ class Microphone extends EventDispatcher {
 			// trigger something ?
 			trace("error getting microphone",e);
 		}
-		untyped __js__("navigator.getUserMedia || navigator.webkitGetUserMedia")( { audio : true } , mic.__create , __onError );
+
+		var supported = false;
+		for( k in ['getUserMedia','webkitGetUserMedia','mozGetUserMedia']){
+			if( untyped js.Browser.navigator[k] != null ){
+				untyped js.Browser.navigator[k]( { audio : true } , mic.__create , __onError );
+				supported = true;
+				break;
+			}
+		}
+
+		if( !supported ){
+			throw "Web Audio API not supported";
+		}
+		
 		return mic;
 	}
 

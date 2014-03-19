@@ -51,10 +51,12 @@ class Sound extends EventDispatcher {
 	//private var __channelDataBuffer:ArrayBuffer;
 	private var __sampleIndex:Int = 0;
 	private var __scriptProcessorNode:ScriptProcessorNode;
+
+	public var __buffer = false;
 	
 	public function new (stream:URLRequest = null, context:SoundLoaderContext = null):Void {
 		
-		super (this);
+		super ( #if bitfive this #end );
 		
 		bytesLoaded = 0;
 		bytesTotal = 0;

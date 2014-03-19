@@ -37,7 +37,7 @@ class SoundChannel extends EventDispatcher {
 
 	private function new ():Void {
 		
-		super (this);
+		super ( #if bitfive this #end );
 
 		ChannelId = -1;
 		leftPeak = 0.;

@@ -1,4 +1,4 @@
-package flash.media;
+package openfl.media;
 
 import js.html.audio.AudioContext;
 import js.html.audio.AudioProcessingEvent;

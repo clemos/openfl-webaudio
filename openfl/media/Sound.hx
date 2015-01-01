@@ -1,4 +1,4 @@
-package flash.media;
+package openfl.media;
 
 
 import flash.events.Event;

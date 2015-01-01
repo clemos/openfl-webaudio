@@ -1,11 +1,11 @@
-package flash.media;
+package openfl.media;
 
 import flash.events.EventDispatcher;
-import flash.media.SoundMixer;
+import openfl.media.SoundMixer;
 import js.html.audio.MediaStreamAudioSourceNode;
 import js.html.rtc.MediaStream;
 import js.html.audio.ScriptProcessorNode;
-import flash.events.SampleDataEvent;
+import openfl.events.SampleDataEvent;
 import js.html.audio.AudioProcessingEvent;
 
 class Microphone extends EventDispatcher {

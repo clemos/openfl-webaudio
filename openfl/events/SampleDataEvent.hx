@@ -1,4 +1,4 @@
-package flash.events;
+package openfl.events;
 
 import flash.utils.ByteArray;
 import js.html.audio.AudioProcessingEvent;

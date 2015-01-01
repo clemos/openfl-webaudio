@@ -58,7 +58,23 @@ class Microphone extends EventDispatcher {
 		var supported = false;
 		for( k in ['getUserMedia','webkitGetUserMedia','mozGetUserMedia']){
 			if( untyped js.Browser.navigator[k] != null ){
-				untyped js.Browser.navigator[k]( { audio : true } , mic.__create , __onError );
+				untyped js.Browser.navigator[k]( { 
+					audio : { 
+						optional : [ 
+							{echoCancellation : false} , 
+							{echoCancelation : false} , 
+							{googEchoCancellation : false} , 
+							{googEchoCancellation2 : false} , 
+							{googAutoGainControl : false}, 
+							{googAutoGainControl2 : false}, 
+							{googNoiseSuppression : false}, 
+							{googNoiseSuppression2 : false}, 
+							{googHighpassFilter : false}, 
+							{googTypingNoiseDetection : false}, 
+							{googAudioMirroring : false}
+						] 
+					}
+				} , mic.__create , __onError );
 				supported = true;
 				break;
 			}

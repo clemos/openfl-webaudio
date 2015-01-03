@@ -26,7 +26,7 @@ class SoundChannel extends EventDispatcher {
 	public var __panner (default,null) : PannerNode;
 	private var __scriptProcessorNode:ScriptProcessorNode;
 
-	public var position (default, null):Float;
+	public var position (get, null):Float;
 	public var rightPeak (default, null):Float;
 	public var soundTransform (default, set_soundTransform):SoundTransform;
 
@@ -35,13 +35,15 @@ class SoundChannel extends EventDispatcher {
 	private var __removeRef:Void->Void;
 	private var __startTime:Float;
 
+	private var __startedAt:Float;
+
 	private function new ():Void {
 		
 		super ( #if bitfive this #end );
 
 		ChannelId = -1;
 		leftPeak = 0.;
-		position = 0.;
+		//position = 0.;
 		rightPeak = 0.;
 		
 		__audioCurrentLoop = 1;
@@ -133,8 +135,12 @@ class SoundChannel extends EventDispatcher {
 
 	private function __start(){
 		untyped {
+			
 			if( __source.start != null ){
-				__source.start ( SoundMixer.__audioContext.currentTime );	
+				console.log('starting at ' + __startTime );
+				var __currentTime = SoundMixer.__audioContext.currentTime;
+				__source.start ( __currentTime , __startTime );	
+				__startedAt = __currentTime;
 			}else{
 				__source.noteOn ( 0 );	
 			}
@@ -233,6 +239,10 @@ class SoundChannel extends EventDispatcher {
 		return this.soundTransform = v;
 		
 	}
-	
+
+	private function get_position() : Float {
+		return __startTime + SoundMixer.__audioContext.currentTime - __startedAt;	
+	}
+		
 	
 }
